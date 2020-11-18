@@ -10,7 +10,7 @@ import CoreHaptics
 
 enum BitMaskCategory: Int {
     case asteroid = 1
-    case asteroidDown = 2
+    case explosion = 2
     case cannon = 4
     case ship = 8
     case health = 16

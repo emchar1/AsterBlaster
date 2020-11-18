@@ -52,11 +52,7 @@ class AsterBlasterController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func fireTheLaser(_ recognizer: UITapGestureRecognizer) {
-//        let hitResult = sceneView.hitTest(crosshairsView.center, options: [.categoryBitMask: CategoryBitMasks.asteroid.rawValue])
-        
         cannon.fire()
-        
-//        Asteroid.despawn(with: hitResult)
     }
     
     
@@ -75,29 +71,17 @@ extension AsterBlasterController: SCNPhysicsContactDelegate {
         let nodeA = contact.nodeA
         let nodeB = contact.nodeB
         
-        
 //        if nodeA.physicsBody?.categoryBitMask == BitMaskCategory.asteroid.rawValue {
             nodeA.removeAllActions()
             nodeA.removeFromParentNode()
-            
 //        }
 //        else if nodeB.physicsBody?.categoryBitMask == BitMaskCategory.asteroid.rawValue {
             nodeB.removeAllActions()
             nodeB.removeFromParentNode()
-//        }
-        
-//        collision(with: nodeA, onto: nodeB)
-    }
-    
-    private func collision(with nodeCannon: SCNNode, onto nodeAsteroid: SCNNode) {
-        nodeCannon.removeAllActions()
-        nodeCannon.runAction(SCNAction.fadeOut(duration: 0.25)) {
-            nodeCannon.removeFromParentNode()
-        }
 
-        nodeAsteroid.removeAllActions()
-        nodeAsteroid.runAction(SCNAction.fadeOut(duration: 0.25)) {
-            nodeAsteroid.removeFromParentNode()
-        }
+            DispatchQueue.main.async { [self] in
+                asteroids.explode(at: contact.contactPoint)
+            }
+//        }
     }
 }

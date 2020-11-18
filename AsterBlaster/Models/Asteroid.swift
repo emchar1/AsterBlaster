@@ -24,6 +24,7 @@ struct Asteroid {
         node.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: node))
         node.physicsBody!.isAffectedByGravity = false
         node.physicsBody!.categoryBitMask = BitMaskCategory.asteroid.rawValue
+        node.physicsBody!.collisionBitMask = 0
         node.physicsBody!.contactTestBitMask = BitMaskCategory.cannon.rawValue
         node.position = SCNVector3(x: Float(Int.random(in: -spawnRange...spawnRange)),
                                    y: Float(Int.random(in: -spawnRange...spawnRange)),
@@ -49,28 +50,21 @@ struct Asteroid {
     }
     
     private func impactOccurred(for node: SCNNode) {
-        let haptics = Haptics()
-        haptics.asteroidStrike()
+//        let haptics = Haptics()
+//        haptics.asteroidStrike()
 
         node.removeFromParentNode()
         print("Ship damaged!")        
     }
     
-    static func despawn(with hitTestResults: [SCNHitTestResult]) {
-        guard let result = hitTestResults.first else {
-            print("Miss")
+    func explode(at contactPoint: SCNVector3) {
+        guard let explosionScene = SCNScene(named: "art.scnassets/explosion.scn"),
+              let explosionNode = explosionScene.rootNode.childNode(withName: "explosion", recursively: false) else {
             return
         }
+
+        explosionNode.position = contactPoint
         
-//        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-
-        let node = result.node
-        node.removeAllActions()
-        node.categoryBitMask = BitMaskCategory.asteroidDown.rawValue // i.e. prevent tapping once it's dead
-        node.runAction(SCNAction.fadeOut(duration: 0.25)) {
-            node.removeFromParentNode()
-        }
-
-        print("Hit asteroid!")
+        sceneView.scene.rootNode.addChildNode(explosionNode)
     }
 }

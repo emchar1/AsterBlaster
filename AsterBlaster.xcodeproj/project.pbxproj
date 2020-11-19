@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		EA6794602555FA8100C5E6FF /* PortalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA67945F2555FA8100C5E6FF /* PortalController.swift */; };
 		EA6794652555FC2200C5E6FF /* Samara.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6794642555FC2200C5E6FF /* Samara.swift */; };
+		EAAEBFFC2565EEEB002EFD1D /* MerlyneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAAEBFFB2565EEEB002EFD1D /* MerlyneController.swift */; };
 		EAD7F47B2549D4A3008D29A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD7F47A2549D4A3008D29A8 /* AppDelegate.swift */; };
 		EAD7F47D2549D4A3008D29A8 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = EAD7F47C2549D4A3008D29A8 /* art.scnassets */; };
 		EAD7F47F2549D4A3008D29A8 /* AsterBlasterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAD7F47E2549D4A3008D29A8 /* AsterBlasterController.swift */; };
@@ -44,6 +45,7 @@
 		EA67945F2555FA8100C5E6FF /* PortalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortalController.swift; sourceTree = "<group>"; };
 		EA6794642555FC2200C5E6FF /* Samara.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Samara.swift; sourceTree = "<group>"; };
 		EA764A73254BEFCF00F1C606 /* Asteroid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Asteroid.swift; sourceTree = "<group>"; };
+		EAAEBFFB2565EEEB002EFD1D /* MerlyneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerlyneController.swift; sourceTree = "<group>"; };
 		EAD7F4772549D4A3008D29A8 /* AsterBlaster.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AsterBlaster.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAD7F47A2549D4A3008D29A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAD7F47C2549D4A3008D29A8 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 			children = (
 				EAD7F47E2549D4A3008D29A8 /* AsterBlasterController.swift */,
 				EA67945F2555FA8100C5E6FF /* PortalController.swift */,
+				EAAEBFFB2565EEEB002EFD1D /* MerlyneController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				EAEEF18225513FB900BDC1D2 /* LaserCannon.swift in Sources */,
 				EAD7F47B2549D4A3008D29A8 /* AppDelegate.swift in Sources */,
 				EA6794652555FC2200C5E6FF /* Samara.swift in Sources */,
+				EAAEBFFC2565EEEB002EFD1D /* MerlyneController.swift in Sources */,
 				EAEEF1622550F91C00BDC1D2 /* CrosshairsView.swift in Sources */,
 				EAEEF1BC25529C3800BDC1D2 /* Constants.swift in Sources */,
 				EA6794602555FA8100C5E6FF /* PortalController.swift in Sources */,

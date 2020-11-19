@@ -64,7 +64,7 @@ struct LaserCannon {
         sceneView.scene.rootNode.addChildNode(nodeR)
         
         //Remove the bullets after a certain duration.
-        let sequence = SCNAction.sequence([SCNAction.wait(duration: 3.0),
+        let sequence = SCNAction.sequence([SCNAction.wait(duration: 2.0),
                                            SCNAction.removeFromParentNode()])
         nodeL.runAction(sequence)
         nodeR.runAction(sequence)

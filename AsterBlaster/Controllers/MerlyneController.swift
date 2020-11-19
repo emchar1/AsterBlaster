@@ -27,8 +27,32 @@ class MerlyneController: UIViewController {
 //        loadAnimations(sceneName: "art.scnassets/Nightshade/summon3Fixed.dae")
 
         
-        loadAnimations()
+        queueAnimation(withKey: "summon1",
+                       sceneName: "art.scnassets/Nightshade/summon1Fixed",
+                       animationIdentifier: "summon1Fixed-1",
+                       repeatCount: 1,
+                       speed: 1,
+                       fadeInDuration: 1,
+                       fadeOutDuration: 0.25)
+        queueAnimation(withKey: "summon2",
+                       sceneName: "art.scnassets/Nightshade/summon2Fixed",
+                       animationIdentifier: "summon2Fixed-1",
+                       repeatCount: 1,
+                       speed: 0.5,
+                       fadeInDuration: 0.25,
+                       fadeOutDuration: 0.25)
+        queueAnimation(withKey: "summon3",
+                       sceneName: "art.scnassets/Nightshade/summon3Fixed",
+                       animationIdentifier: "summon3Fixed-1",
+                       repeatCount: 1,
+                       speed: 0.5,
+                       fadeInDuration: 0.25,
+                       fadeOutDuration: 1)
         
+        loadAnimations(withFile: "art.scnassets/Nightshade/summon0Fixed.dae")
+
+
+        print("animations: \(animations)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,8 +108,8 @@ class MerlyneController: UIViewController {
     
     
     
-    func loadAnimations() {
-        guard let idleScene = SCNScene(named: "art.scnassets/Nightshade/summon0Fixed.dae") else {
+    func loadAnimations(withFile file: String) {
+        guard let idleScene = SCNScene(named: file) else {
             fatalError("idle scene file not found in loadAnimations()")
         }
         
@@ -100,31 +124,35 @@ class MerlyneController: UIViewController {
         node.eulerAngles = SCNVector3(x: 0, y: 0, z: 0)
         
         sceneView.scene.rootNode.addChildNode(node)
-        
-        loadAnimation(withKey: "summon1", sceneName: "art.scnassets/Nightshade/summon1Fixed", animationIdentifier: "summon1Fixed-1")
-        loadAnimation(withKey: "summon2", sceneName: "art.scnassets/Nightshade/summon2Fixed", animationIdentifier: "summon2Fixed-1")
-        loadAnimation(withKey: "summon3", sceneName: "art.scnassets/Nightshade/summon3Fixed", animationIdentifier: "summon3Fixed-1")
     }
     
-    func loadAnimation(withKey key: String, sceneName: String, animationIdentifier: String) {
-        //First, we load the file as an SCNSceneSource, which is used to extract elements of a scene without keeping the entire scene and all the assets it contains. In this case, we use it to extract the animation as a CAAnimation object, on which we set the property repeatCount to only play the animation one time and fadeInDuration and fadeOutDuration to create a smooth transition between this and the idle animation. Finally, the animation is stored for later use.
-        guard let sceneURL = Bundle.main.url(forResource: sceneName, withExtension: "dae"),
-              let sceneSource = SCNSceneSource(url: sceneURL, options: nil) else {
-            fatalError(sceneName + " not found in loadAnimation(withKey:sceneName:animationIdentifier:)")
+    //First, we load the file as an SCNSceneSource, which is used to extract elements of a scene without keeping the entire scene and all the assets it contains. In this case, we use it to extract the animation as a CAAnimation object, on which we set the property repeatCount to only play the animation one time and fadeInDuration and fadeOutDuration to create a smooth transition between this and the idle animation. Finally, the animation is stored for later use.
+    func queueAnimation(withKey key: String,
+                        sceneName: String,
+                        animationIdentifier: String,
+                        repeatCount: Float = 1,
+                        speed: Float = 1,
+                        fadeInDuration: CGFloat = 1,
+                        fadeOutDuration: CGFloat = 1) {
+        
+        guard let sceneURL = Bundle.main.url(forResource: sceneName, withExtension: "dae") else {
+            fatalError("sceneName: " + sceneName + " not found.")
         }
         
-        if let animationObject = sceneSource.entryWithIdentifier(animationIdentifier, withClass: CAAnimation.self) {
-            
-            //repeat count of animation
-            animationObject.repeatCount = 1
-            
-            //Creates smooth transition between animations
-            animationObject.fadeInDuration = CGFloat(1)
-            animationObject.fadeOutDuration = CGFloat(1)
-            
-            //store animation for later use
-            animations[key] = animationObject
+        guard let sceneSource = SCNSceneSource(url: sceneURL, options: nil) else {
+            fatalError("sceneSource failed.")
         }
+        
+        guard let animationObject = sceneSource.entryWithIdentifier(animationIdentifier, withClass: CAAnimation.self) else {
+            fatalError("animationObject failed.")
+        }
+            
+        animationObject.repeatCount = repeatCount
+        animationObject.speed = speed
+        animationObject.fadeInDuration = fadeInDuration
+        animationObject.fadeOutDuration = fadeOutDuration
+
+        animations[key] = animationObject
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -141,9 +169,11 @@ class MerlyneController: UIViewController {
         }
         
         if idle {
-            playAnimation(key: "summon1")
-            playAnimation(key: "summon2")
-            playAnimation(key: "summon3")
+            playAnimation(key: "summon1", completion: nil)
+            playAnimation(key: "summon2", completion: nil)
+            playAnimation(key: "summon3", completion: {
+                print("Done")
+            })
         }
         else {
             stopAnimation(key: "summon1")
@@ -154,14 +184,16 @@ class MerlyneController: UIViewController {
         idle = !idle
     }
     
-    func playAnimation(key: String) {
+    func playAnimation(key: String, completion: (() -> ())?) {
         //add the animation to start playing it right away
         sceneView.scene.rootNode.addAnimation(animations[key]!, forKey: key)
+                
+        completion?()
     }
     
     func stopAnimation(key: String) {
         //stop the animation with a smooth transition
-        sceneView.scene.rootNode.removeAnimation(forKey: key, blendOutDuration: CGFloat(0.5))
+        sceneView.scene.rootNode.removeAnimation(forKey: key, blendOutDuration: CGFloat(1))
     }
 }
 

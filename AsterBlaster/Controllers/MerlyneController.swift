@@ -13,11 +13,9 @@ class MerlyneController: UIViewController {
     var idle = true
     
     override func viewDidLoad() {
-        let scene = SCNScene()
         
         sceneView.delegate = self
         sceneView.autoenablesDefaultLighting = true
-        sceneView.scene = scene
 
         
         
@@ -31,8 +29,8 @@ class MerlyneController: UIViewController {
                        sceneName: "art.scnassets/Nightshade/summon1Fixed",
                        animationIdentifier: "summon1Fixed-1",
                        repeatCount: 1,
-                       speed: 1,
-                       fadeInDuration: 1,
+                       speed: 0.75,
+                       fadeInDuration: 0.5,
                        fadeOutDuration: 0.25)
         queueAnimation(withKey: "summon2",
                        sceneName: "art.scnassets/Nightshade/summon2Fixed",
@@ -40,14 +38,14 @@ class MerlyneController: UIViewController {
                        repeatCount: 1,
                        speed: 0.5,
                        fadeInDuration: 0.25,
-                       fadeOutDuration: 0.25)
+                       fadeOutDuration: 0.5)
         queueAnimation(withKey: "summon3",
                        sceneName: "art.scnassets/Nightshade/summon3Fixed",
                        animationIdentifier: "summon3Fixed-1",
                        repeatCount: 1,
                        speed: 0.5,
                        fadeInDuration: 0.25,
-                       fadeOutDuration: 1)
+                       fadeOutDuration: 0.25)
         
         loadAnimations(withFile: "art.scnassets/Nightshade/summon0Fixed.dae")
 
@@ -146,7 +144,7 @@ class MerlyneController: UIViewController {
         guard let animationObject = sceneSource.entryWithIdentifier(animationIdentifier, withClass: CAAnimation.self) else {
             fatalError("animationObject failed.")
         }
-            
+                    
         animationObject.repeatCount = repeatCount
         animationObject.speed = speed
         animationObject.fadeInDuration = fadeInDuration
@@ -169,11 +167,11 @@ class MerlyneController: UIViewController {
         }
         
         if idle {
-            playAnimation(key: "summon1", completion: nil)
-            playAnimation(key: "summon2", completion: nil)
-            playAnimation(key: "summon3", completion: {
-                print("Done")
-            })
+            self.playAnimation(key: "summon1") {
+                self.playAnimation(key: "summon2") {
+                    self.playAnimation(key: "summon3", completion: nil)
+                }
+            }
         }
         else {
             stopAnimation(key: "summon1")
@@ -186,9 +184,16 @@ class MerlyneController: UIViewController {
     
     func playAnimation(key: String, completion: (() -> ())?) {
         //add the animation to start playing it right away
-        sceneView.scene.rootNode.addAnimation(animations[key]!, forKey: key)
+        guard let animationWithKey = animations[key] else {
+            return
+        }
                 
-        completion?()
+        let animationDuration: TimeInterval = animationWithKey.duration / Double(animationWithKey.speed) - Double(animationWithKey.fadeInDuration) - Double(animationWithKey.fadeOutDuration)
+        Timer.scheduledTimer(withTimeInterval: animationDuration, repeats: false) { (timer) in
+            completion?()
+        }
+        
+        sceneView.scene.rootNode.addAnimation(animationWithKey, forKey: key)
     }
     
     func stopAnimation(key: String) {
